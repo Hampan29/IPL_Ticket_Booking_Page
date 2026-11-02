@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL 2026 Ticket Booking</title>
+</head>
+
+<body>
+
+    <!-- Header and Navigation -->
+    <header>
+        <h1>IPL 2026 Ticket Booking</h1>
+
+        <nav>
+            <ul>
+                <li><a href="#matches">Matches</a></li>
+                <li><a href="#booking">Book Ticket</a></li>
+                <li><a href="#my-bookings">My Bookings</a></li>
+                <li><a href="#guidelines">Guidelines</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section id="home">
+            <h2>Experience The Stadium Energy Live!</h2>
+
+            <button type="button">View Schedule</button>
+            <button type="button">Book Ticket</button>
+        </section>
+
+        <!-- About IPL 2026 -->
+        <section id="about">
+            <h2>About IPL 2026</h2>
+
+            <p>
+                The Indian Premier League (IPL) is a professional
+                Twenty20 cricket league featuring teams representing
+                different cities across India.
+            </p>
+
+            <h3>Popular Teams</h3>
+            <ul>
+                <li>Chennai Super Kings (CSK)</li>
+                <li>Mumbai Indians (MI)</li>
+                <li>Royal Challengers Bengaluru (RCB)</li>
+                <li>Kolkata Knight Riders (KKR)</li>
+                <li>Sunrisers Hyderabad (SRH)</li>
+                <li>Rajasthan Royals (RR)</li>
+                <li>Delhi Capitals (DC)</li>
+                <li>Punjab Kings (PBKS)</li>
+                <li>Gujarat Titans (GT)</li>
+                <li>Lucknow Super Giants (LSG)</li>
+            </ul>
+
+            <h3>Major Match Venues</h3>
+            <ul>
+                <li>M. A. Chidambaram Stadium, Chennai</li>
+                <li>Wankhede Stadium, Mumbai</li>
+                <li>M. Chinnaswamy Stadium, Bengaluru</li>
+                <li>Eden Gardens, Kolkata</li>
+                <li>Rajiv Gandhi International Cricket Stadium, Hyderabad</li>
+                <li>Sawai Mansingh Stadium, Jaipur</li>
+                <li>Arun Jaitley Stadium, Delhi</li>
+                <li>Narendra Modi Stadium, Ahmedabad</li>
+            </ul>
+        </section>
+
+        <!-- Match Schedule -->
+        <section id="matches">
+            <h2>Match Schedule</h2>
+
+            <!-- Team Filter -->
+            <label for="team-filter">Filter by Team:</label>
+
+            <select id="team-filter" name="team-filter">
+                <option value="all">All Teams</option>
+                <option value="CSK">Chennai Super Kings</option>
+                <option value="MI">Mumbai Indians</option>
+                <option value="RCB">Royal Challengers Bengaluru</option>
+                <option value="KKR">Kolkata Knight Riders</option>
+                <option value="SRH">Sunrisers Hyderabad</option>
+                <option value="RR">Rajasthan Royals</option>
+                <option value="DC">Delhi Capitals</option>
+                <option value="PBKS">Punjab Kings</option>
+                <option value="GT">Gujarat Titans</option>
+                <option value="LSG">Lucknow Super Giants</option>
+            </select>
+
+            <br><br>
+
+            <!-- Match Table -->
+            <table border="1">
+
+                <thead>
+                    <tr>
+                        <th>Match Number</th>
+                        <th>Teams</th>
+                        <th>Date &amp; Time</th>
+                        <th>Venue</th>
+                        <th>Ticket Prices</th>
+                        <th>Book</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Match 1</td>
+                        <td>Royal Challengers Bengaluru (RCB) vs Chennai Super Kings (CSK)</td>
+                        <td>31 October 2026, 7:30PM IST</td>
+                        <td>M. Chinnaswamy Stadium, Bengaluru</td>
+                        <td>
+                            General: ₹500<br>
+                            Premium: ₹1500<br>
+                            VIP: ₹3000
+                        </td>
+                        <td><a href="#booking">Book</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Match 2</td>
+                        <td>Mumbai Indians (MI) vs Gujarat Titans (GT)</td>
+                        <td>01 November 2026, 7:30PM IST</td>
+                        <td>Wankhede Stadium, Mumbai</td>
+                        <td>
+                            General: ₹600<br>
+                            Premium: ₹1800<br>
+                            VIP: ₹3500
+                        </td>
+                        <td><a href="#booking">Book</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Match 3</td>
+                        <td>Sunrisers Hyderabad (SRH) vs Punjab Kings (PBKS)</td>
+                        <td>02 November 2026, 7:30PM IST</td>
+                        <td>Rajiv Gandhi International Cricket Stadium, Hyderabad</td>
+                        <td>
+                            General: ₹700<br>
+                            Premium: ₹2000<br>
+                            VIP: ₹4000
+                        </td>
+                        <td><a href="#booking">Book</a></td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </section>
+
+        <!-- Ticket Booking Form and Summary -->
+        <section id="booking">
+            <h2>Ticket Booking</h2>
+
+            <form>
+
+                <label for="match">Select Match:</label>
+                <select id="match" name="match" required>
+                    <option value="">Select a Match</option>
+                    <option value="Match 1">Match 1</option>
+                    <option value="Match 2">Match 2</option>
+                    <option value="Match 3">Match 3</option>
+                </select>
+
+                <br><br>
+
+                <label for="stand">Stand Category:</label>
+                <select id="stand" name="stand" required>
+                    <option value="">Select Stand</option>
+                    <option value="General">General</option>
+                    <option value="Premium">Premium</option>
+                    <option value="VIP">VIP</option>
+                </select>
+
+                <br><br>
+
+                <label for="quantity">Number of Tickets:</label>
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    max="10"
+                    required
+                >
+
+                <br><br>
+
+                <label for="name">Name:</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <br><br>
+
+                <label for="email">Email:</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <br><br>
+
+                <label for="phone">Phone Number:</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    required
+                >
+
+                <br><br>
+
+                <button type="submit">Book Now</button>
+
+            </form>
+
+            <!-- Booking Summary Card -->
+            <div>
+                <h3>Booking Summary</h3>
+
+                <p>Selected Match: Not Selected</p>
+                <p>Stand Category: Not Selected</p>
+                <p>Ticket Price: ₹0</p>
+                <p>Quantity: 0</p>
+                <p>Total Amount: ₹0</p>
+            </div>
+
+        </section>
+
+        <!-- My Ticket Bookings -->
+        <section id="my-bookings">
+            <h2>My Ticket Bookings</h2>
+
+            <table border="1">
+
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Match</th>
+                        <th>Stand Category</th>
+                        <th>Number of Tickets</th>
+                        <th>Total Amount</th>
+                        <th>Booking Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- Booking records will be added later -->
+                </tbody>
+
+            </table>
+        </section>
+
+        <!-- Guidelines -->
+        <section id="guidelines">
+            <h2>Ticket Booking Guidelines</h2>
+
+            <div>
+                <h3>Ticket Verification</h3>
+                <p>
+                    Verify your ticket at the stadium entrance
+                    and carry your booking confirmation.
+                </p>
+            </div>
+
+            <div>
+                <h3>ID Proof Requirement</h3>
+                <p>
+                    Carry a valid government-issued ID proof
+                    for ticket verification.
+                </p>
+            </div>
+
+            <div>
+                <h3>Prohibited Items</h3>
+                <p>
+                    Outside food, beverages, sharp objects,
+                    fireworks and other restricted items are
+                    not allowed inside the stadium.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 IPL Ticket Booking. All Rights Reserved.</p>
+    </footer>
+
+</body>
+
+</html>
