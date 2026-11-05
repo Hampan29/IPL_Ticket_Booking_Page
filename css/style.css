@@ -1,0 +1,281 @@
+/* Website colors */
+:root {
+    --primary-color: #123568;
+    --accent-color: #f5a623;
+    --background-color: #f2f5fa;
+    --text-color: #263445;
+    --white-color: #ffffff;
+    --border-color: #d7dfeb;
+}
+
+/* Basic page styles */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 110px;
+}
+
+body {
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navigation bar */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 5%;
+    background-color: var(--primary-color);
+    box-shadow: 0 3px 10px #00000030;
+}
+
+.ipl {
+    margin: 0;
+    color: var(--white-color);
+    font-size: 24px;
+}
+
+.site-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-link {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: var(--white-color);
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+    background-color: var(--accent-color);
+}
+
+/* Main content and section cards */
+main {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 110px 0 30px;
+}
+
+.content-section {
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--white-color);
+    box-shadow: 0 4px 14px #12356814;
+    scroll-margin-top: 110px;
+}
+
+.content-section h2,
+.content-section h3 {
+    color: var(--primary-color);
+}
+
+.content-section h2 {
+    margin-top: 0;
+}
+
+/* Hero banner */
+.hero {
+    padding: 60px 24px;
+    background: linear-gradient(135deg, #123568, #2878a8);
+    color: var(--white-color);
+    text-align: center;
+}
+
+.hero .hero-title {
+    margin: 0 0 20px;
+    color: var(--white-color);
+    font-size: 36px;
+}
+
+/* Buttons */
+.button {
+    margin: 5px;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: #e59612;
+}
+
+/* About section lists */
+.about-section p {
+    max-width: 750px;
+}
+
+.about-section ul {
+    padding-left: 24px;
+}
+
+.about-section li {
+    margin-bottom: 6px;
+}
+
+/* Match and booking tables */
+.team-filter,
+.booking-form input,
+.booking-form select {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--white-color);
+    font-size: 16px;
+}
+
+.data-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: var(--white-color);
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: top;
+}
+
+.data-table th {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f6f8fc;
+}
+
+.book-link {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Booking form and summary */
+.booking-form label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.booking-form input,
+.booking-form select {
+    display: block;
+    margin-top: 4px;
+}
+
+.booking-form br {
+    display: none;
+}
+
+.summary-card {
+    margin-top: 24px;
+    padding: 18px;
+    border: 1px solid #f0d18e;
+    border-radius: 8px;
+    background-color: #fff8e8;
+}
+
+.summary-card h3 {
+    margin-top: 0;
+}
+
+.summary-card p {
+    margin: 8px 0;
+}
+
+/* Guidelines */
+.guideline-card {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-color);
+    border-radius: 6px;
+    background-color: #f8faff;
+}
+
+.guideline-card h3 {
+    margin: 0 0 6px;
+}
+
+.guideline-card p {
+    margin: 0;
+}
+
+/* Footer */
+.site-footer {
+    padding: 20px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    text-align: center;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 700px) {
+    .site-header {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .site-nav ul {
+        justify-content: center;
+    }
+
+    .nav-link {
+        padding: 6px 8px;
+        font-size: 14px;
+    }
+
+    main {
+        padding-top: 140px;
+    }
+
+    .data-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .content-section {
+        padding: 20px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+    }
+}
