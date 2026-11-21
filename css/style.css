@@ -268,6 +268,32 @@ main {
     margin: 0;
 }
 
+/* Toast message shown after clicking a match booking link */
+.toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2;
+    padding: 12px 18px;
+    border-radius: 6px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    box-shadow: 0 3px 10px #00000030;
+    animation: toastFadeIn 0.8s ease;
+}
+
+@keyframes toastFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Adjust the layout for smaller screens */
 @media (max-width: 700px) {
     .site-header {
