@@ -12,7 +12,17 @@
     <header class="site-header">
         <h1 class="ipl">IPL 2026 Ticket Booking</h1>
 
-        <nav class="site-nav">
+        <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="booking-navigation"
+        >
+            <span class="menu-toggle-label">Menu</span>
+            <span class="menu-toggle-icon" aria-hidden="true">&#9776;</span>
+        </button>
+
+        <nav class="site-nav" id="booking-navigation">
             <ul>
                 <li><a class="nav-link" href="./index.html">Home</a></li>
                 <li><a class="nav-link" href="./index.html#matches">Matches</a></li>
@@ -114,6 +124,8 @@
     <footer class="site-footer">
         <p>&copy; 2026 IPL Ticket Booking. All Rights Reserved.</p>
     </footer>
+
+    <script src="./js/app.js"></script>
 </body>
 
 </html>

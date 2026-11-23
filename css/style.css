@@ -56,6 +56,27 @@ body {
     list-style: none;
 }
 
+.menu-toggle {
+    display: none;
+    padding: 8px 12px;
+    border: 1px solid var(--white-color);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--white-color);
+    cursor: pointer;
+    font: inherit;
+}
+
+.menu-toggle:hover {
+    background-color: #ffffff20;
+}
+
+.menu-toggle:focus-visible,
+.view-button:focus-visible {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
+}
+
 .nav-link {
     display: block;
     padding: 8px 12px;
@@ -145,7 +166,7 @@ main {
     margin-bottom: 6px;
 }
 
-/* Match and booking tables */
+/* Match cards and booking form */
 .team-filter,
 .booking-form input,
 .booking-form select {
@@ -156,6 +177,97 @@ main {
     border-radius: 6px;
     background-color: var(--white-color);
     font-size: 16px;
+}
+
+.match-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.match-controls label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.view-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.view-button {
+    padding: 10px 14px;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+    background: var(--white-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    font: inherit;
+}
+
+.view-button.is-selected,
+.view-button:hover {
+    background: var(--primary-color);
+    color: var(--white-color);
+}
+
+.match-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.match-list.list-view {
+    grid-template-columns: 1fr;
+}
+
+.match-empty {
+    margin: 0 0 16px;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.match-card {
+    padding: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--white-color);
+    box-shadow: 0 3px 10px #12356814;
+}
+
+.match-card[hidden] {
+    display: none;
+}
+
+.match-card h3 {
+    margin: 0 0 10px;
+    color: var(--primary-color);
+}
+
+.match-card p {
+    margin: 8px 0;
+}
+
+.match-card .match-teams {
+    min-height: 3.2em;
+    font-weight: bold;
+}
+
+.match-card .book-link {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    background: var(--accent-color);
+    text-decoration: none;
+}
+
+.match-card .book-link:hover {
+    background: #e59612;
 }
 
 .data-table {
@@ -239,8 +351,13 @@ main {
 }
 
 /* Guidelines */
+.guideline-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
 .guideline-card {
-    margin-top: 12px;
     padding: 16px;
     border: 1px solid var(--border-color);
     border-left: 4px solid var(--accent-color);
@@ -295,20 +412,54 @@ main {
 }
 
 /* Adjust the layout for smaller screens */
+@media (max-width: 900px) {
+    .match-list,
+    .match-list.list-view,
+    .guideline-list {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 700px) {
     .site-header {
-        flex-direction: column;
-        gap: 8px;
+        flex-wrap: wrap;
+        gap: 10px;
         padding: 10px;
     }
 
+    .ipl {
+        font-size: 20px;
+    }
+
+    .menu-toggle {
+        display: block;
+        margin-left: auto;
+    }
+
+    .site-nav {
+        display: none;
+        width: 100%;
+    }
+
+    .site-nav.is-open {
+        display: block;
+    }
+
     .site-nav ul {
-        justify-content: center;
+        flex-direction: column;
+        gap: 2px;
     }
 
     .nav-link {
-        padding: 6px 8px;
-        font-size: 14px;
+        padding: 8px;
+    }
+
+    .match-controls {
+        align-items: stretch;
+    }
+
+    .view-buttons {
+        flex-wrap: wrap;
     }
 
     main {
