@@ -2,21 +2,55 @@ import { useEffect, useState } from 'react'
 import Hero from './components/Hero.jsx'
 import MatchCard from './components/MatchCard.jsx'
 import Navbar from './components/Navbar.jsx'
-import { matches, teams, venues } from './data/matches.js'
+import { supabase } from './supabase.js'
+
+const TEAM_CODES = {
+  'Royal Challengers Bengaluru': 'RCB',
+  'Chennai Super Kings': 'CSK',
+  'Mumbai Indians': 'MI',
+  'Kolkata Knight Riders': 'KKR',
+  'Sunrisers Hyderabad': 'SRH',
+  'Rajasthan Royals': 'RR',
+  'Delhi Capitals': 'DC',
+  'Punjab Kings': 'PBKS',
+  'Lucknow Super Giants': 'LSG',
+  'Gujarat Titans': 'GT',
+}
 
 function formatPrice(amount) {
   return `₹${Number(amount || 0).toLocaleString('en-IN')}`
 }
 
-function App() {
-  // Keep the match list safe if the data file is ever empty or changed.
-  const safeMatches = Array.isArray(matches) ? matches : []
-  const firstMatchId = safeMatches.length > 0 ? safeMatches[0].id : ''
+// Converts a row from Supabase's 'matches' table into the shape our UI components expect
+function formatMatchFromDB(row, index) {
+  const basePrice = Number(row.price || 1000)
+  return {
+    id: row.id,
+    matchNumber: `Match ${index + 1}`,
+    team1: row.team1,
+    team1Code: TEAM_CODES[row.team1] || row.team1.slice(0, 3).toUpperCase(),
+    team2: row.team2,
+    team2Code: TEAM_CODES[row.team2] || row.team2.slice(0, 3).toUpperCase(),
+    venue: row.venue,
+    date: row.match_date,
+    available_seats: row.available_seats ?? 100,
+    prices: {
+      General: basePrice,
+      Premium: basePrice * 2,
+      VIP: basePrice * 4,
+    },
+  }
+}
 
-  // These state values track the selected team, layout, booking form, and bookings.
+function App() {
+  // Live matches fetched from Supabase PostgreSQL
+  const [matches, setMatches] = useState([])
+  const [isLoadingMatches, setIsLoadingMatches] = useState(true)
+
+  // UI filter, form, and booking states
   const [selectedTeam, setSelectedTeam] = useState('all')
   const [matchView, setMatchView] = useState('grid')
-  const [selectedMatchId, setSelectedMatchId] = useState(firstMatchId)
+  const [selectedMatchId, setSelectedMatchId] = useState('')
   const [selectedStand, setSelectedStand] = useState('General')
   const [quantity, setQuantity] = useState(1)
   const [seatPreference, setSeatPreference] = useState('No preference')
@@ -27,7 +61,16 @@ function App() {
   const [bookedTicketCount, setBookedTicketCount] = useState(0)
   const [toastMessage, setToastMessage] = useState('')
 
-  const selectedMatch = safeMatches.find(function (match) {
+  // Build unique teams and venues lists dynamically from the live database matches
+  const teamsMap = new Map()
+  matches.forEach(function (match) {
+    teamsMap.set(match.team1Code, { code: match.team1Code, name: match.team1 })
+    teamsMap.set(match.team2Code, { code: match.team2Code, name: match.team2 })
+  })
+  const teams = Array.from(teamsMap.values())
+  const venues = Array.from(new Set(matches.map(function (match) { return match.venue })))
+
+  const selectedMatch = matches.find(function (match) {
     return match.id === selectedMatchId
   }) || null
 
@@ -36,14 +79,76 @@ function App() {
     : 0
   const totalPrice = ticketPrice * quantity
 
-  const filteredMatches = safeMatches.filter(function (match) {
+  const filteredMatches = matches.filter(function (match) {
     if (selectedTeam === 'all') {
       return true
     }
-
     return match.team1Code === selectedTeam || match.team2Code === selectedTeam
   })
 
+  // STEP 3 & STEP 5: Fetch matches from Supabase and subscribe to realtime updates
+  useEffect(function () {
+    async function fetchMatches() {
+      const { data, error } = await supabase
+        .from('matches')
+        .select('*')
+        .order('id', { ascending: true })
+
+      if (error) {
+        console.error('Error fetching matches from Supabase:', error.message)
+        setToastMessage('Could not load matches from database.')
+      } else {
+        console.log('Loaded matches from Supabase:', data)
+        const formatted = (data || []).map(formatMatchFromDB)
+        setMatches(formatted)
+        if (formatted.length > 0) {
+          setSelectedMatchId(function (prevId) {
+            return prevId === '' ? formatted[0].id : prevId
+          })
+        }
+      }
+      setIsLoadingMatches(false)
+    }
+
+    fetchMatches()
+
+    const channel = supabase
+      .channel('matches-realtime-updates')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'matches' },
+        function (payload) {
+          console.log('Realtime database update:', payload)
+
+          if (payload.eventType === 'UPDATE') {
+            setMatches(function (prevMatches) {
+              return prevMatches.map(function (item, idx) {
+                return item.id === payload.new.id
+                  ? formatMatchFromDB(payload.new, idx)
+                  : item
+              })
+            })
+          } else if (payload.eventType === 'INSERT') {
+            setMatches(function (prevMatches) {
+              return [...prevMatches, formatMatchFromDB(payload.new, prevMatches.length)]
+            })
+          } else if (payload.eventType === 'DELETE') {
+            setMatches(function (prevMatches) {
+              return prevMatches.filter(function (item) {
+                return item.id !== payload.old.id
+              })
+            })
+          }
+        }
+      )
+      .subscribe()
+
+    return function () {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
+  // Auto-hide toast notifications after 4 seconds
   useEffect(function () {
     if (toastMessage === '') {
       return undefined
@@ -71,12 +176,12 @@ function App() {
   }
 
   function handleSelectMatch(matchId) {
-    setSelectedMatchId(matchId)
+    setSelectedMatchId(Number(matchId))
     setToastMessage('Match selected. Choose a stand and ticket quantity.')
   }
 
   function handleBookingMatchChange(event) {
-    handleSelectMatch(event.target.value)
+    handleSelectMatch(Number(event.target.value))
   }
 
   function handleStandChange(event) {
@@ -104,7 +209,8 @@ function App() {
     setCustomerPhone(event.target.value)
   }
 
-  function handleBookTicket(event) {
+  // STEP 4: Insert booking into 'bookings' and update 'available_seats' in 'matches'
+  async function handleBookTicket(event) {
     event.preventDefault()
 
     if (!selectedMatch) {
@@ -112,8 +218,50 @@ function App() {
       return
     }
 
+    if (selectedMatch.available_seats < quantity) {
+      setToastMessage(`Only ${selectedMatch.available_seats} seats left for this match.`)
+      return
+    }
+
+    // 1. Insert new row into Supabase 'bookings' table
+    const { data: insertedRows, error: insertError } = await supabase
+      .from('bookings')
+      .insert([
+        {
+          match_id: selectedMatch.id,
+          customer_name: customerName,
+          seats_booked: quantity,
+          total_amount: totalPrice,
+        },
+      ])
+      .select()
+
+    if (insertError) {
+      console.error('Supabase insert error:', insertError.message)
+      setToastMessage('Booking failed: ' + insertError.message)
+      return
+    }
+
+    // 2. Subtract booked seats in Supabase 'matches' table
+    const updatedSeats = selectedMatch.available_seats - quantity
+
+    const { error: updateError } = await supabase
+      .from('matches')
+      .update({ available_seats: updatedSeats })
+      .eq('id', selectedMatch.id)
+
+    if (updateError) {
+      console.error('Supabase update error:', updateError.message)
+      setToastMessage('Booking saved, but failed to update available seats.')
+      return
+    }
+
+    const dbBookingId = insertedRows && insertedRows[0]
+      ? `IPL-${insertedRows[0].id}`
+      : `IPL-${bookings.length + 1}`
+
     const newBooking = {
-      id: `IPL-${bookings.length + 1}`,
+      id: dbBookingId,
       matchNumber: selectedMatch.matchNumber,
       teams: `${selectedMatch.team1} vs ${selectedMatch.team2}`,
       stand: selectedStand,
@@ -127,8 +275,8 @@ function App() {
 
     setBookings([newBooking, ...bookings])
     setBookedTicketCount(bookedTicketCount + quantity)
-    console.log('Booked match:', selectedMatch.id, selectedMatch.team1, selectedMatch.team2)
-    setToastMessage('Your ticket booking has been added.')
+    console.log('Booked & saved to PostgreSQL:', dbBookingId, selectedMatch.team1, selectedMatch.team2)
+    setToastMessage('Your ticket booking has been saved to Supabase!')
   }
 
   function handleToastClose() {
@@ -207,11 +355,12 @@ function App() {
             </div>
           </div>
 
-          {filteredMatches.length === 0 ? (
+          {isLoadingMatches ? (
+            <p className="match-empty">Loading live matches from Supabase...</p>
+          ) : filteredMatches.length === 0 ? (
             <p className="match-empty">No matches found for this team.</p>
           ) : (
             <div className={matchView === 'list' ? 'match-list list-view' : 'match-list'}>
-              {/* Map the filtered match data to one reusable card per match. */}
               {filteredMatches.map(function (match) {
                 return (
                   <MatchCard
@@ -226,6 +375,7 @@ function App() {
                     date={match.date}
                     price={match.prices.General}
                     prices={match.prices}
+                    availableSeats={match.available_seats}
                     view={matchView}
                     onBook={handleSelectMatch}
                   />
@@ -246,15 +396,15 @@ function App() {
                 value={selectedMatchId}
                 onChange={handleBookingMatchChange}
                 required
-                disabled={safeMatches.length === 0}
+                disabled={matches.length === 0}
               >
-                {safeMatches.length === 0 ? (
+                {matches.length === 0 ? (
                   <option value="">No matches available</option>
                 ) : (
-                  safeMatches.map(function (match) {
+                  matches.map(function (match) {
                     return (
                       <option key={match.id} value={match.id}>
-                        {match.matchNumber}: {match.team1} vs {match.team2}
+                        {match.matchNumber}: {match.team1} vs {match.team2} ({match.available_seats} seats left)
                       </option>
                     )
                   })
@@ -363,6 +513,7 @@ function App() {
             <aside className="summary-card" aria-live="polite">
               <h3>Booking Summary</h3>
               <p>Selected Match: <span>{selectedMatch ? selectedMatch.matchNumber : 'Not Selected'}</span></p>
+              <p>Seats Available: <span>{selectedMatch ? selectedMatch.available_seats : 0}</span></p>
               <p>Stand Category: <span>{selectedStand || 'Not Selected'}</span></p>
               <p>Ticket Price: <span>{formatPrice(ticketPrice)}</span></p>
               <p>Quantity: <span>{quantity}</span></p>
