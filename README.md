@@ -64,6 +64,16 @@ IPL_Ticket_Booking_Page/
 
 The original HTML page can still be opened separately using Live Server.
 
+## Deploy to GitHub Pages
+
+Push changes to the `main` branch. The GitHub Actions workflow builds the
+React app and deploys it to:
+
+`https://hampan29.github.io/IPL_Ticket_Booking_Page/`
+
+In the repository, open **Settings → Pages** and select **GitHub Actions** as
+the deployment source if it is not already selected.
+
 ## Run the Original HTML Version
 
 1. Download or clone this project.
